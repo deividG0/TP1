@@ -11,7 +11,7 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # fileName = sys.argv[3]
 IP_address = 'localhost'
 Port = 8080
-file_name = 'file2.txt'
+file_name = 'file6.txt'
 server.connect((IP_address, Port))
 
 

@@ -15,31 +15,27 @@ class LRUCache:
             node = self.cache[key]
             self._remove_node(node)
             self._add_node(node)
-            return node.value
+            return node.content
         else:
             return -1
 
-    def put(self, key, value):
+    def put(self, key, content, value):
         # add the new key-value pair to the cache and the front of the linked list
         self.calculate_free_space()
-        data_size = sys.getsizeof(value)
-        print(f'data_size:{data_size}')
-        print(f'self.cache:{self.cache}')
-        while self.free_space < data_size:
+        self.get_cache_order()
+        while self.free_space < value:
             # remove the least recently used key from the cache and the end of the linked list
             del self.cache[self.tail.key]
             self._remove_node(self.tail)
             self.calculate_free_space()
         if key in self.cache:
-            print('entrou aqui?')
             # update the value and move the key to the front of the linked list
             node = self.cache[key]
             node.value = value
             self._remove_node(node)
             self._add_node(node)
         else:
-            print('entrou aqui????')
-            node = Node(key, value)
+            node = Node(key, content, value)
             self.cache[key] = node
             self._add_node(node)
         self.calculate_free_space()
@@ -65,8 +61,8 @@ class LRUCache:
 
     def calculate_free_space(self):
         space = 0
-        for value in self.cache.values():
-            space += sys.getsizeof(value)
+        for item in self.cache.values():
+            space += item.value
         self.free_space = self.capacity - space
 
     def get_free_space(self):
@@ -78,10 +74,24 @@ class LRUCache:
         else:
             return False
 
+    def get_cache_order(self):
+        aux_node = self.head
+        count = 0
+        print('---------------------------------    CACHE    ---------------------------------')
+        print(f'--------- Occupied Space: {self.capacity - self.free_space} -------------  Free Space: {self.free_space}  -----------------')
+        while count < len(self.cache):
+            content_print = aux_node.content[0:20] if aux_node.content.__len__() > 30 else aux_node.content+'...'
+            print(f'Nº: {count} | Key: {aux_node.key} | Content: {content_print} | Value: {aux_node.value}')
+            aux_node = aux_node.next
+            count+=1
+        print('-------------------------------------------------------------------------------')
+        print('   ')
+
 
 class Node:
-    def __init__(self, key, value):
+    def __init__(self, key, content, value):
         self.key = key
+        self.content = content
         self.value = value
         self.prev = None
         self.next = None
