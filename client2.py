@@ -3,15 +3,15 @@ from _thread import *
 import time
 import sys
 
-print(sys.argv)
+# print(sys.argv)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# IP_address = sys.argv[1]
-# Port = int(sys.argv[2])
-# fileName = sys.argv[3]
-IP_address = 'localhost'
-Port = 8080
-file_name = 'file2.txt'
+IP_address = sys.argv[1]
+Port = int(sys.argv[2])
+file_name = sys.argv[3]
+# IP_address = 'localhost'
+# Port = 8080
+# file_name = 'file1.txt'
 server.connect((IP_address, Port))
 
 

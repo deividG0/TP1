@@ -1,18 +1,19 @@
+import sys
 import socket
 from _thread import *
 import os
 from cache import *
 
-print(sys.argv)
+# print(sys.argv)
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 IP_address = ''
-# Port = int(sys.argv[1])
-Port = 8080
-# home_folder = sys.argv[2]
-home_folder = 'home/dist/homework1/'
+Port = int(sys.argv[1])
+# Port = 8080
+home_folder = sys.argv[2]
+# home_folder = 'home/dist/homework1/'
 
 server.bind((IP_address, Port))
 server.listen(100)
@@ -20,12 +21,13 @@ server.listen(100)
 list_of_clients = []
 capacity = 64
 cache = LRUCache(capacity)
+#LRU - Least Recently Used
 
 
 def sendFileFromCache(file_name, connection):
     print(f"Cache hit. File {file_name} sent to the client.")
-    connection.send(cache.get(file_name).encode("utf-8"))
     cache.get_cache_order()
+    connection.send(cache.get(file_name).encode("utf-8"))
 
 
 def sendFileFromRepo(file_name, connection):
@@ -37,7 +39,6 @@ def sendFileFromRepo(file_name, connection):
         if data_size < capacity:
             # Armazenando na cache
             cache.put(key=file_name, content=content, value=data_size)
-            cache.get_cache_order()
         else:
             print('Não foi armazenado em cache')
 
@@ -48,6 +49,7 @@ def sendFileFromRepo(file_name, connection):
         print(f"File {file_name} does not exist")
         content = ''
         connection.send(content.encode("utf-8"))
+        connection.close()
 
 
 def manageFileRequest(file_name, connection):

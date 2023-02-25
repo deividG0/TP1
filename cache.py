@@ -1,6 +1,3 @@
-import sys
-
-
 class LRUCache:
     def __init__(self, capacity):
         self.capacity = capacity
@@ -13,32 +10,38 @@ class LRUCache:
         if key in self.cache:
             # move the accessed key to the front of the linked list
             node = self.cache[key]
-            self._remove_node(node)
-            self._add_node(node)
-            return node.content
+            if node.lock is False:
+                self._remove_node(node)
+                self._add_node(node)
+                self.get_cache_order()
+                return node.content
+            else:
+                return -1
         else:
             return -1
 
     def put(self, key, content, value):
         # add the new key-value pair to the cache and the front of the linked list
         self.calculate_free_space()
-        self.get_cache_order()
         while self.free_space < value:
             # remove the least recently used key from the cache and the end of the linked list
+            self.cache[self.tail.key].lock = True
             del self.cache[self.tail.key]
             self._remove_node(self.tail)
             self.calculate_free_space()
         if key in self.cache:
             # update the value and move the key to the front of the linked list
             node = self.cache[key]
-            node.value = value
-            self._remove_node(node)
-            self._add_node(node)
+            if node.lock is False:
+                node.value = value
+                self._remove_node(node)
+                self._add_node(node)
         else:
             node = Node(key, content, value)
             self.cache[key] = node
             self._add_node(node)
         self.calculate_free_space()
+        self.get_cache_order()
 
     def _remove_node(self, node):
         if node.prev:
@@ -104,5 +107,6 @@ class Node:
         self.key = key
         self.content = content
         self.value = value
+        self.lock = False
         self.prev = None
         self.next = None
