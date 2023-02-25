@@ -18,7 +18,7 @@ server.bind((IP_address, Port))
 server.listen(100)
 
 list_of_clients = []
-capacity = 150
+capacity = 64
 cache = LRUCache(capacity)
 
 
@@ -61,8 +61,11 @@ def client_thread(connection, address):
     try:
         file_name = connection.recv(2048).decode()
         if file_name:
-            print(f"Client {address[0]} is requesting file {file_name}")
-            manageFileRequest(file_name,connection)
+            if file_name == 'list':
+                connection.send(cache.get_cache_list().encode("utf-8"))
+            else:
+                print(f"Client {address[0]} is requesting file {file_name}")
+                manageFileRequest(file_name, connection)
     except Exception as e:
         print(e)
 

@@ -88,6 +88,17 @@ class LRUCache:
         print('   ')
 
 
+    def get_cache_list(self):
+        aux_node = self.head
+        count = 0
+        cache_list = ''
+        while count < len(self.cache):
+            cache_list = cache_list + f'---- Nº: {count}, Key: {aux_node.key} ----'
+            aux_node = aux_node.next
+            count+=1
+        return cache_list
+
+
 class Node:
     def __init__(self, key, content, value):
         self.key = key

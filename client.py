@@ -11,24 +11,25 @@ server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # fileName = sys.argv[3]
 IP_address = 'localhost'
 Port = 8080
-file_name = 'file2.txt'
+file_name = 'file1.txt'
 server.connect((IP_address, Port))
 
 
 def receiveMessage():
     data = server.recv(2048).decode("utf-8")
-    print(data)
-    if len(data) <= 0: # Deve ter uma melhor forma de verificar se o arquivo nao existe
-        print(f"File {file_name} does not exist in the server")
+    if file_name == 'list' and len(data) <= 0:
+        print(data)
     else:
-        file = open(file_name, "w")
-        file.write(data)
-        print(f"File {file_name} saved")
-        file.close()
+        if len(data) <= 0: # Deve ter uma melhor forma de verificar se o arquivo nao existe
+            print(f"File {file_name} does not exist in the server")
+        else:
+            file = open(file_name, "w")
+            file.write(data)
+            print(f"File {file_name} saved")
+            file.close()
 
 
 def sendMessage():
-    # message = input("")
     try:
         server.send(file_name.encode("utf-8"))
     except Exception as e:
