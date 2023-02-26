@@ -1,5 +1,10 @@
 # Practical Work 1
 
+Student: Deivid Gomes Silva
+
+Registration: 2022134345
+_________________
+
 - **System architecture**
 
 The project built in Python with the help of the PyCharm IDE was structured with basically three main files. These files were responsible, respectively, for the operation of the server, for the client's interaction and for structuring the LRU cache class.
